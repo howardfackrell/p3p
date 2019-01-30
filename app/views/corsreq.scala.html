@@ -1,0 +1,55 @@
+
+@import helper._
+@()(implicit request: RequestHeader)
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <p>Enter the URL and hit submit to performa a CORS request</p>
+        <input type="text" id="url" value="http://localhost:9000/user" size="100">
+        <button name="go">go</button>
+
+        <div id="content">result will appear here</div>
+
+        <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
+        <script>
+            $.support.cors = true;
+            $.ajaxPrefilter( function( options, originalOptions, jqXHR){
+                options.crossDomain ={
+                    crossDomain: true
+                };
+                options.xhrFields = {
+                    withCredentials: true
+                };
+            });
+
+            $("document").ready(function() {
+              $("button").on('click', function() {
+                console.log("running the cors request....");
+                var url = $("#url").val();
+                console.log("url: " + url);
+                $.ajax(url)
+                        .done(function (data, textStatus, jqXHR) {
+                          console.log("ajax done");
+                          console.log("status: " + textStatus);
+                          console.log("data: " + data);
+                           $("#content").text(data);
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            console.log("ajax failed");
+                            $("#content").text(
+                                "url:" + url + "  status: " + textStatus + " error: " + errorThrown);
+
+                        });
+              });
+            });
+
+        </script>
+    </body>
+</html>
