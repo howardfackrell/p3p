@@ -39,7 +39,7 @@ class HomeController @Inject()(cc: ControllerComponents, conf: Configuration) ex
     username.map {
       uname =>
         val response = Redirect("/").withCookies(Cookie("nicelist", uname))
-        if (p3p.isEmpty) {
+        if (p3p == null || p3p.trim().isEmpty) {
           Logger.warn("No p3p value specified")
           response
         }
