@@ -38,7 +38,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
     username.map {
       uname =>
-        Redirect("/").withCookies(Cookie("nicelist", uname))
+        Redirect("/").withCookies(Cookie("nicelist", uname, sameSite = Some(Cookie.SameSite.Lax)))
     }.getOrElse(Ok(views.html.login()))
   }
 
