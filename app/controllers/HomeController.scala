@@ -9,7 +9,7 @@ import play.api.mvc._
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents, conf: Configuration) extends AbstractController(cc) {
+class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
 
   /**
@@ -35,18 +35,10 @@ class HomeController @Inject()(cc: ControllerComponents, conf: Configuration) ex
         form.getOrElse("username", Seq[String]()).headOption
     }
 
-    val p3p: String  = conf.get[String]("p3p")
+
     username.map {
       uname =>
-        val response = Redirect("/").withCookies(Cookie("nicelist", uname))
-        if (p3p == null || p3p.trim().isEmpty) {
-          Logger.warn("No p3p value specified")
-          response
-        }
-        else {
-          Logger.warn(s"setting cookie with p3p value of '$p3p'")
-          response.withHeaders("P3P" -> ("CP=\"" + p3p + "\""))
-        }
+        Redirect("/").withCookies(Cookie("nicelist", uname))
     }.getOrElse(Ok(views.html.login()))
   }
 
